@@ -175,7 +175,7 @@ Ext.onReady(function () {
 					                layout: 'fit',
 					                frame: true,
 					                border: false,
-					                height : 900,
+					                height : 800,
 					                
 					                items: {
 					                    xtype: 'form',
@@ -188,49 +188,165 @@ Ext.onReady(function () {
 						                region:'west',
 						                floatable: false,
 						                margins: '5 0 0 0',
-						                width: 800,
-						                items : {
-						                    xtype: 'button',
-						                    text : 'My Button',
-						                    	listeners: {
-						                            click: function() {
-						                            	
-						                            	var mapwin = Ext.create('Ext.window.Window', {
-						                                    autoShow: true,
-						                                    layout: 'fit',
-						                                    title: 'GMap Window',
-						                                    closeAction: 'hide',
-						                                    width:450,
-						                                    height:450,
-						                                    border: false,
-						                                    x: 40,
-						                                    y: 60,
-						                                    items: {
-						                                        xtype: 'gmappanel',
-						                                        center: {
-						                                            geoCodeAddr: '4 Yawkey Way, Boston, MA, 02215-3409, USA',
-						                                            marker: {title: 'Fenway Park'}
-						                                        },
-						                                        markers: [{
-						                                            lat: 42.339641,
-						                                            lng: -71.094224,
-						                                            title: 'Boston Museum of Fine Arts',
-						                                            listeners: {
-						                                                click: function(e){
-						                                                    Ext.Msg.alert('It\'s fine', 'and it\'s art.');
-						                                                }
-						                                            }
-						                                        },{
-						                                            lat: 42.339419,
-						                                            lng: -71.09077,
-						                                            title: 'Northeastern University'
-						                                        }]
-						                                    }
-						                                });
-						                            	
-						                            }
-						                    	}
-						                }
+						                width: 500,
+						                items : [
+										{
+									    xtype:'panel',
+										layout: {
+															type: 'vbox'
+														},
+										padding:'10 10 10 10',
+										border : false,
+										frame : false,
+										items:[
+										{
+											xtype:'fieldset',
+											
+											height:150,
+												padding:'10 10 10 10',
+											items:[{
+												xtype:'container',
+												layout: {
+													type: 'hbox'
+												},
+												width: 450,
+												height:120,
+												padding:'10 10 10 10',
+												
+												items: [
+													 {
+														xtype:'container',
+														layout: {
+															type: 'vbox'
+														},
+														width: 300,
+														padding:'20 20 20 20',
+														//renderTo: Ext.getBody(),
+														//border: 1,
+														//style: {borderColor:'#000000', borderStyle:'solid', borderWidth:'1px'},
+														/*defaults: {
+															labelWidth: 80,
+															// implicitly create Container by specifying xtype
+															xtype: 'datefield',
+															flex: 1,
+															style: {
+																padding: '10px'
+															}
+														},*/
+														items: [
+															{
+															xtype:'combobox',
+															fieldLabel: 'Orgin',
+															store: '',
+															//queryMode: 'local',
+															displayField: 'name',
+															valueField: 'abbr',
+															//renderTo: Ext.getBody()	
+															},
+															{
+															xtype:'combobox',
+															fieldLabel: 'Destination',
+															store: '',
+															//queryMode: 'local',
+															displayField: 'name',
+															valueField: 'abbr',
+															//renderTo: Ext.getBody()	
+															}
+														]
+
+													},
+													{
+														xtype:'container',
+														layout: {
+															type: 'vbox'
+														},
+														width: 150,
+														padding:'20 20 20 20',
+														
+														items: [
+															{
+															xtype:'button',
+															text: 'Search',
+															width:100
+								
+															},
+															{
+																xtype:'tbfill',
+																height:5
+															},
+															{
+															xtype:'button',
+															text: 'Clear',
+															width:100
+															
+															}
+														]
+
+													}
+													
+													
+												]
+												
+										}]
+										
+										},
+										{
+											xtype:'fieldset',
+											height:500,
+											padding:'10 10 10 10',
+											items:[{
+												xtype:'container',
+												layout: {
+													type: 'vbox'
+												},
+												width: 450,
+												height:440,
+												padding:'10 10 10 10',
+												
+												items: [
+													 {
+														 xtype:'grid',
+														 title: 'Top 5 Restaurants',
+															//store: Ext.data.StoreManager.lookup('simpsonsStore'),
+															columns: [
+																{ text: 'Name',  dataIndex: 'name' },
+																{ text: 'Address', dataIndex: 'email', flex: 1 },
+							
+															],
+															height: 200,
+															width: 430
+
+													 },
+													 
+															{
+																xtype:'tbfill',
+																height:2
+															},
+													 {
+														 xtype:'grid',
+														 title: 'Top 5 Msc',
+															//store: Ext.data.StoreManager.lookup('simpsonsStore'),
+															columns: [
+																{ text: 'Name',  dataIndex: 'name' },
+																{ text: 'Address', dataIndex: 'email', flex: 1 },
+							
+															],
+															height: 200,
+															width: 430
+
+													 }
+													 ]
+											}
+											]
+										}
+										
+										
+										
+										]}
+										
+										
+										]
+										
 						            },{
 						                title: 'GMAP',
 						                collapsible: false,
@@ -241,15 +357,31 @@ Ext.onReady(function () {
 		                                    autoShow: true,
 		                                    layout: 'fit',
 		                                    closeAction: 'hide',
-		                                    width:900,
-		                                    height:900,
+		                                    width:555,
+		                                    height:700,
 		                                    border: false,
 		                                    x: 0,
 		                                    y: 0, 
 		                                    items: {
 		                                        xtype: 'gmappanel',
-		                                        center: {}, 
-		                                        markers: []
+		                                        center: {
+		                                            geoCodeAddr: '4 Yawkey Way, Boston, MA, 02215-3409, USA',
+		                                            marker: {title: 'Fenway Park'}
+		                                        },
+		                                        markers: [{
+		                                            lat: 42.339641,
+		                                            lng: -71.094224,
+		                                            title: 'Boston Museum of Fine Arts',
+		                                            listeners: {
+		                                                click: function(e){
+		                                                    Ext.Msg.alert('It\'s fine', 'and it\'s art.');
+		                                                }
+		                                            }
+		                                        },{
+		                                            lat: 42.339419,
+		                                            lng: -71.09077,
+		                                            title: 'Northeastern University'
+		                                        }]
 		                                    }
 		                                }
 						            }
