@@ -281,6 +281,7 @@ Ext.onReady(function () {
 														]
 
 													},
+													
 													{
 														xtype:'container',
 														layout: {
