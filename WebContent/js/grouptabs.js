@@ -13,7 +13,31 @@ Ext.onReady(function () {
             panel.ownerCt.remove(panel, true);
         }
     }];
+	
+	var orgin = Ext.create('Ext.data.Store', {
+    fields: ['position', 'name'],
+    data : [
+        {"position":"chicago, il", "name":"Chicago"},
+        {"position":"st louis, mo", "name":"St Louis"},
+        {"position":"joplin, mo", "name":"Joplin, MO"},
+		{"position":"amarillo, tx", "name":"Amarillo"}
+    ]
+	});
 
+	var destination = Ext.create('Ext.data.Store', {
+    fields: ['position', 'name'],
+    data : [
+        {"position":"chicago, il", "name":"Chicago"},
+        {"position":"st louis, mo", "name":"St Louis"},
+        {"position":"joplin, mo", "name":"Joplin, MO"},
+		{"position":"amarillo, tx", "name":"Amarillo"}
+    ]
+	});
+	
+	var directionsService = null;
+	var directionsDisplay = null;
+	var cogmap = null;
+	
     Ext.create('Ext.Viewport', {
         layout: 'fit',
         items: [{
@@ -237,19 +261,21 @@ Ext.onReady(function () {
 															{
 															xtype:'combobox',
 															fieldLabel: 'Orgin',
-															store: '',
-															//queryMode: 'local',
+															id:'orgin',
+															store: orgin,
+															queryMode: 'local',
 															displayField: 'name',
-															valueField: 'abbr',
+															valueField: 'position'
 															//renderTo: Ext.getBody()	
 															},
 															{
 															xtype:'combobox',
 															fieldLabel: 'Destination',
-															store: '',
-															//queryMode: 'local',
+															id:'destination',
+															store: destination,
+															queryMode: 'local',
 															displayField: 'name',
-															valueField: 'abbr',
+															valueField: 'position'
 															//renderTo: Ext.getBody()	
 															}
 														]
@@ -267,7 +293,23 @@ Ext.onReady(function () {
 															{
 															xtype:'button',
 															text: 'Search',
-															width:100
+															width:100,
+															listeners: {
+																	click: function() {
+																		var request = {
+																			origin : Ext.getCmp("orgin").getValue() ,//'chicago, il',
+																			destination : Ext.getCmp("destination").getValue() ,//'st louis, mo',
+																			travelMode : google.maps.TravelMode.DRIVING
+																		};
+																		
+																		directionsService.route(request, function(result, status) {
+																			if (status == google.maps.DirectionsStatus.OK) {
+																				directionsDisplay.setDirections(result);
+																			}
+																		});
+																		
+																	}
+															}
 								
 															},
 															{
@@ -340,7 +382,8 @@ Ext.onReady(function () {
 											]
 										}
 										
-										
+										//vsmramamurthy
+										//r^mgithub83
 										
 										]}
 										
@@ -364,24 +407,32 @@ Ext.onReady(function () {
 		                                    y: 0, 
 		                                    items: {
 		                                        xtype: 'gmappanel',
-		                                        center: {
+												id:'gmappanel',
+												//gmapType: 'map',
+												zoomLevel: 14,
+												center: {
 		                                            geoCodeAddr: '4 Yawkey Way, Boston, MA, 02215-3409, USA',
 		                                            marker: {title: 'Fenway Park'}
 		                                        },
-		                                        markers: [{
-		                                            lat: 42.339641,
-		                                            lng: -71.094224,
-		                                            title: 'Boston Museum of Fine Arts',
-		                                            listeners: {
-		                                                click: function(e){
-		                                                    Ext.Msg.alert('It\'s fine', 'and it\'s art.');
-		                                                }
-		                                            }
-		                                        },{
-		                                            lat: 42.339419,
-		                                            lng: -71.09077,
-		                                            title: 'Northeastern University'
-		                                        }]
+								
+												mapOptions : {
+													mapTypeId: google.maps.MapTypeId.TERRAIN
+												},
+
+		                                        listeners: {
+														mapready: function(ux, gmap){
+														//alert(99);
+															 directionsService = new google.maps.DirectionsService();
+																		 directionsDisplay = new google.maps.DirectionsRenderer();
+																		//var start = 'chicago, il',//document.getElementById("start").value;
+																		//var end = 'st louis, mo',//document.getElementById("end").value;
+																		cogmap = gmap;
+																		directionsDisplay.setMap(cogmap);
+																	
+																		
+																		
+														} 
+													}
 		                                    }
 		                                }
 						            }
