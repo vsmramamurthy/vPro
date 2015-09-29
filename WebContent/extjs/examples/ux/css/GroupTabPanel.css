@@ -1,16 +1,16 @@
 /* Main GroupTabPanel style */
 .x-grouptabpanel {
-    background-color: #FF0000;
-    border: solid 15px #FF0000;
+    background-color: #7f7f7f;
+    border: solid 15px #7f7f7f;
 }
 /* End of GroupTabPanel style */
  
 /* Card Layout container */
 .x-grouptabcontainer {
     background-color: white;
-    border-top: 1px solid #FF0000 !important;    
-    border-bottom: 1px solid #FF0000 !important;
-    border-right: 1px solid #FF0000 !important;
+    border-top: 1px solid #7f7f7f !important;    
+    border-bottom: 1px solid #7f7f7f !important;
+    border-right: 1px solid #7f7f7f !important;
 }
 /* End of Card Layout container */
 
@@ -148,7 +148,7 @@
 }
 
 .x-grouptabbar .x-panel-body  {
-    background-color: #FF0000;
+    background-color: #7f7f7f;
 }
 
 .x-grouptabbar {
