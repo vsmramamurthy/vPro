@@ -14,13 +14,32 @@ Ext.onReady(function () {
         }
     }];
 	
+	
+	var rating = new Ext.ux.widget.Rating({
+				fieldLabel	:	'rating',
+				allowBlank	: false,
+				disabled	: true,
+				//readOnly	: true,
+				value 		: 3.6,
+				titles: {
+						'0': 'poor', 
+						'1.4': 'medium',
+						'3': 'excellent',
+						'5': 'perfect'
+					},
+				allowBlank	:	false
+		    });
+
+	
 	var orgin = Ext.create('Ext.data.Store', {
     fields: ['position', 'name'],
     data : [
         {"position":"chicago, il", "name":"Chicago"},
         {"position":"st louis, mo", "name":"St Louis"},
         {"position":"joplin, mo", "name":"Joplin, MO"},
-		{"position":"amarillo, tx", "name":"Amarillo"}
+		{"position":"amarillo, tx", "name":"Amarillo"},
+		{"position":"New York, NY", "name":"New York"},
+		{"position":"Dupont Circle, Dupont Circle Northwest, Washington, DC 20036", "name":"Dupont Circle"}
     ]
 	});
 
@@ -30,14 +49,42 @@ Ext.onReady(function () {
         {"position":"chicago, il", "name":"Chicago"},
         {"position":"st louis, mo", "name":"St Louis"},
         {"position":"joplin, mo", "name":"Joplin, MO"},
-		{"position":"amarillo, tx", "name":"Amarillo"}
+		{"position":"amarillo, tx", "name":"Amarillo"},
+		{"position":"Tribeca, New York, NY", "name":"Tribeca"},
+		{"position":"American Geophysical Union, 2000 Florida Avenue Northwest, Washington, DC 20009", "name":"American Geophysical Union"}
+    ]
+	});
+	
+	var category = Ext.create('Ext.data.Store', {
+    fields: ['position', 'name'],
+    data : [
+        {"value":"All", "name":"All"},
+        {"value":"Restaurant", "name":"Restaurant"},
+        {"value":"Cafe", "name":"Cafe"},
+		{"value":"Shopping", "name":"Shopping"}
     ]
 	});
 	
 	var directionsService = null;
 	var directionsDisplay = null;
 	var cogmap = null;
+	var infowindow = null;
 	
+	var setaddress = function(address,marker)
+	{
+		return function()
+		{
+			
+			if (infowindow) {
+				infowindow.close();
+			}
+    		infowindow = new google.maps.InfoWindow({
+			content: address
+			});
+			infowindow.open(cogmap, marker);
+		}
+	};
+
     Ext.create('Ext.Viewport', {
         layout: 'fit',
         items: [{
@@ -62,7 +109,13 @@ Ext.onReady(function () {
 											border: false,
 											items: [{
 												flex: 1,
-												items: []
+												items: [rating,{
+													xtype:'image',
+													src: 'extjs/resources/vHub.png',
+												    width: 1000,
+												    height: 700
+
+												}]
 											}]
 										}, {
 												title: 'vTrack',
@@ -92,6 +145,7 @@ Ext.onReady(function () {
 						                title: 'Navigation',
 						                region:'west',
 						                floatable: false,
+										collapsible: true,
 						                margins: '5 0 0 0',
 						                width: 500,
 						                items : [
@@ -144,7 +198,7 @@ Ext.onReady(function () {
 															fieldLabel: 'Orgin',
 															id:'orgin',
 															store: orgin,
-															queryMode: 'local',
+															//queryMode: 'local',
 															displayField: 'name',
 															valueField: 'position'
 															//renderTo: Ext.getBody()	
@@ -154,9 +208,25 @@ Ext.onReady(function () {
 															fieldLabel: 'Destination',
 															id:'destination',
 															store: destination,
-															queryMode: 'local',
+															//queryMode: 'local',
 															displayField: 'name',
 															valueField: 'position'
+															//renderTo: Ext.getBody()	
+															},
+															{
+															xtype:'combobox',
+															fieldLabel: 'Category',
+															id:'category',
+															store: category,
+															//queryMode: 'local',
+															displayField: 'name',
+															valueField: 'value',
+															listeners: {
+															change: function() {
+																Ext.Msg.alert('Chosen book', 'Buying ISBN: '+ this.getValue());
+																}
+															}
+
 															//renderTo: Ext.getBody()	
 															}
 														]
@@ -178,15 +248,64 @@ Ext.onReady(function () {
 															width:100,
 															listeners: {
 																	click: function() {
-																		var request = {
-																			origin : Ext.getCmp("orgin").getValue() ,//'chicago, il',
-																			destination : Ext.getCmp("destination").getValue() ,//'st louis, mo',
-																			travelMode : google.maps.TravelMode.DRIVING
-																		};
 																		
-																		directionsService.route(request, function(result, status) {
-																			if (status == google.maps.DirectionsStatus.OK) {
-																				directionsDisplay.setDirections(result);
+																		Ext.Ajax.request({ // 5
+																		url : '/vPro/VHubService',
+																		scope : this,
+																		params : {
+																		verizonPhoneNumber:'7299988899'
+																		//key:Ext.MessageBox.alert(recordsToInsertUpdate)
+																		},
+																		success:    function(result,request){
+																				//alert(result.responseText)
+																				var data = JSON.parse(result.responseText).data;
+																				Ext.getCmp("rgrid").getStore().loadData(data);
+																				
+																				 //var stepDisplay = new google.maps.InfoWindow;
+																				 //var markerArray = [];
+																				var request = {
+																					origin : Ext.getCmp("orgin").getValue() ,//'chicago, il',
+																					destination : Ext.getCmp("destination").getValue() ,//'st louis, mo',
+																					travelMode : google.maps.TravelMode.DRIVING
+																				};																			 																			
+																				
+																				directionsService.route(request, function(result, status) {
+																					if (status == google.maps.DirectionsStatus.OK) {
+																						directionsDisplay.setDirections(result);
+																						
+																						for (i = 0; i < data.length; i++) {																							 
+																							// var marker = new google.maps.Marker;
+																							
+																							var iconpng = 'extjs/resources/resturanticon.png';
+																							if(data[i].cat == 'Shopping')
+																								iconpng = 'extjs/resources/shoppingicon.png';
+																							else if (data[i].cat == 'Cafe')
+																								iconpng = 'extjs/resources/cafeicon.png';
+																							
+																							
+																							 var marker = new google.maps.Marker({																					
+																								
+																								icon: iconpng
+																							});
+																							
+																							marker.setMap(cogmap);
+																							var position = new google.maps.LatLng(data[i].lat,data[i].lon);
+																							marker.setPosition(position);																							
+																							
+																							/*google.maps.event.addListener(marker, 'click', function() {
+																								var infowindow = new google.maps.InfoWindow({
+																								content: data[i].adress
+																									});
+																								infowindow.open(cogmap, marker);
+																									});	*/
+
+																							google.maps.event.addListener(marker, 'click', setaddress(data[i].adress,marker));
+																							
+																						 }
+																						
+																		
+																					}
+																				});
 																			}
 																		});
 																		
@@ -201,7 +320,10 @@ Ext.onReady(function () {
 															{
 															xtype:'button',
 															text: 'Clear',
-															width:100
+															width:100,
+															handler:function() {
+																
+															}
 															
 															}
 														]
@@ -230,12 +352,16 @@ Ext.onReady(function () {
 												items: [
 													 {
 														 xtype:'grid',
+														 id:'rgrid',
 														 title: 'Top 5 Restaurants',
-															//store: Ext.data.StoreManager.lookup('simpsonsStore'),
+															store:Ext.create('Ext.data.Store', {
+															     fields:['name','adress','rating','url','msc','lat','lon','cat']
+															  }),
 															columns: [
 																{ text: 'Name',  dataIndex: 'name' },
-																{ text: 'Address', dataIndex: 'email', flex: 1 },
-							
+																{ text: 'Address', dataIndex: 'adress', flex: 1 },
+																{ text: 'Rating', dataIndex: 'rating'},
+																{ text: 'Category', dataIndex: 'cat'}
 															],
 															height: 200,
 															width: 430
@@ -282,7 +408,7 @@ Ext.onReady(function () {
 		                                    autoShow: true,
 		                                    layout: 'fit',
 		                                    closeAction: 'hide',
-		                                    width:555,
+		                                    //width:555,
 		                                    height:700,
 		                                    border: false,
 		                                    x: 0,
