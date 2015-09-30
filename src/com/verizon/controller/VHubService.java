@@ -46,11 +46,14 @@ public class VHubService extends HttpServlet {
 		System.out.println("SSSSSSSSSSSSSSSSSSSSSSSSSS"+userName);
 		try {
 			Result result =  new Result();
+			
+			if("All".equalsIgnoreCase(userName) || "Restaurant".equalsIgnoreCase(userName))
+			{
 			result.setName("Subway");
 			result.setAdress("Subway,1605 Connecticut Ave NW,Washington, DC 20009");
 			result.setRating("4.7");
 			result.setUrl("wwe.gyhfhfgh");
-			result.setMsc("ssssssssssssssss");
+			result.setMsc("Strong");
 			result.setLat("38.911478");
 			result.setLon("-77.044155");
 			result.setCat("Restaurant");
@@ -61,7 +64,7 @@ public class VHubService extends HttpServlet {
 			result.setAdress("ShopHouse Southeast Asian Kitchen,1516 Connecticut Ave NW,Washington, DC 20036");
 			result.setRating("4.0");
 			result.setUrl("wwe.gyhfhfgh");
-			result.setMsc("ssssssssssssssss");
+			result.setMsc("Very Strong");
 			result.setLat("38.910721");
 			result.setLon("-77.044329");
 			result.setCat("Restaurant");
@@ -72,7 +75,7 @@ public class VHubService extends HttpServlet {
 			result.setAdress("Darlington House,1610 20th St NW,Washington, DC 20009");
 			result.setRating("3.8");
 			result.setUrl("wwe.gyhfhfgh");
-			result.setMsc("ssssssssssssssss");
+			result.setMsc("Strong");
 			result.setLat("38.911631");
 			result.setLon("-77.045212");
 			result.setCat("Restaurant");
@@ -83,7 +86,7 @@ public class VHubService extends HttpServlet {
 			result.setAdress("Mission Dupont,1606 20th St NW,Washington, DC 20009");
 			result.setRating("4.5");
 			result.setUrl("wwe.gyhfhfgh");
-			result.setMsc("ssssssssssssssss");
+			result.setMsc("Strong");
 			result.setLat("38.911482");
 			result.setLon("-77.045136");
 			result.setCat("Restaurant");
@@ -94,7 +97,7 @@ public class VHubService extends HttpServlet {
 			result.setAdress("CIRCA at Dupont,1601 Connecticut Ave NW,Washington, DC 20009");
 			result.setRating("4.1");
 			result.setUrl("wwe.gyhfhfgh");
-			result.setMsc("ssssssssssssssss");
+			result.setMsc("Very Strong");
 			result.setLat("38.911347");
 			result.setLon("-77.04406");
 			result.setCat("Restaurant");
@@ -105,18 +108,22 @@ public class VHubService extends HttpServlet {
 			result.setAdress("Triple B Fresh,1506 19th St NW,Washington, DC 20036");
 			result.setRating("3.6");
 			result.setUrl("wwe.gyhfhfgh");
-			result.setMsc("ssssssssssssssss");
+			result.setMsc("Strong");
 			result.setLat("38.91066");
 			result.setLon("-77.043651");
 			result.setCat("Restaurant");
 			data.add(result);
 			
+			}
+			
+			if("All".equalsIgnoreCase(userName) || "Shopping".equalsIgnoreCase(userName))
+			{
 			result =  new Result();
 			result.setName("Beadazzled");
 			result.setAdress("Beadazzled,1507 Connecticut Ave NW,Washington, DC 20036");
 			result.setRating("3.8");
 			result.setUrl("wwe.gyhfhfgh");
-			result.setMsc("ssssssssssssssss");
+			result.setMsc("Strong");
 			result.setLat("38.91064");
 			result.setLon("-77.043718");
 			result.setCat("Shopping");
@@ -127,7 +134,7 @@ public class VHubService extends HttpServlet {
 			result.setAdress("Dupont Circle FRESHFARM Market,1500 20th St NW,Washington, DC 20036");
 			result.setRating("4.5");
 			result.setUrl("wwe.gyhfhfgh");
-			result.setMsc("ssssssssssssssss");
+			result.setMsc("Very Strong");
 			result.setLat("38.910646");
 			result.setLon("-77.044654");
 			result.setCat("Shopping");
@@ -138,7 +145,7 @@ public class VHubService extends HttpServlet {
 			result.setAdress("Loft,1611 Connecticut Ave NW #4A,Washington, DC 20009");
 			result.setRating("4.0");
 			result.setUrl("wwe.gyhfhfgh");
-			result.setMsc("ssssssssssssssss");
+			result.setMsc("Strong");
 			result.setLat("38.911652");
 			result.setLon("-77.044235");
 			result.setCat("Shopping");
@@ -147,20 +154,23 @@ public class VHubService extends HttpServlet {
 			result =  new Result();
 			result.setName("ShoppingCart");
 			result.setAdress("1630 Connecticut Ave NW,Washington, DC 20009");
-			result.setRating("34234234");
+			result.setRating("4.0");
 			result.setUrl("wwe.gyhfhfgh");
-			result.setMsc("ssssssssssssssss");
+			result.setMsc("Strong");
 			result.setLat("38.9120493");
 			result.setLon("-77.0452262");
 			result.setCat("Shopping");			
 			data.add(result);
+			}
 			
+			if("All".equalsIgnoreCase(userName) || "Cafe".equalsIgnoreCase(userName))
+			{
 			result =  new Result();
 			result.setName("Capital Teas");
 			result.setAdress("Capital Teas, Dupont Circle,1627 Connecticut Ave NW,Washington, DC 20009");
 			result.setRating("4.0");
 			result.setUrl("wwe.gyhfhfgh");
-			result.setMsc("ssssssssssssssss");
+			result.setMsc("Weak");
 			result.setLat("38.912012");
 			result.setLon("-77.044461");
 			result.setCat("Cafe");			
@@ -171,7 +181,7 @@ public class VHubService extends HttpServlet {
 			result.setAdress("Starbucks,1700 Connecticut Ave NW,Washington, DC 20009");
 			result.setRating("4.7");
 			result.setUrl("wwe.gyhfhfgh");
-			result.setMsc("ssssssssssssssss");
+			result.setMsc("Strong");
 			result.setLat("38.912767");
 			result.setLon("-77.045576");
 			result.setCat("Cafe");			
@@ -182,7 +192,7 @@ public class VHubService extends HttpServlet {
 			result.setAdress("Teaism Dupont Circle,2009 R St NW,Washington, DC 20009");
 			result.setRating("3.9");
 			result.setUrl("wwe.gyhfhfgh");
-			result.setMsc("ssssssssssssssss");
+			result.setMsc("Very Strong");
 			result.setLat("38.912772");
 			result.setLon("-77.045816");
 			result.setCat("Cafe");			
@@ -193,11 +203,12 @@ public class VHubService extends HttpServlet {
 			result.setAdress("Kramerbooks & Afterwords Cafe,1517 Connecticut Ave NW,Washington, DC 20036");
 			result.setRating("3.1");
 			result.setUrl("wwe.gyhfhfgh");
-			result.setMsc("ssssssssssssssss");
+			result.setMsc("Weak");
 			result.setLat("38.91079");
 			result.setLon("-77.043699");
 			result.setCat("Cafe");			
 			data.add(result);
+			}
 			
 		}catch(Throwable e){
 			
