@@ -68,9 +68,15 @@ Ext.onReady(function () {
 	
 	var directionsService = null;
 	var directionsDisplay = null;
+	var directionsService1 = null;
+	var directionsDisplay1= null;
 	var cogmap = null;
+	var cogmap1 = null;
+	
 	var infowindow = null;
 	var markers = [];
+	var infowindow1 = null;
+	var markers1 = [];
 	
 	var setaddress = function(name,address,value,msc,marker)
 	{
@@ -95,6 +101,29 @@ Ext.onReady(function () {
 		markers = [];
 	};
 
+	var setaddress1 = function(name,address,value,msc,marker)
+	{
+		return function()
+		{
+			
+			if (infowindow1) {
+				infowindow1.close();
+			}
+    		infowindow1 = new google.maps.InfoWindow({
+			content: "Signal Strength:</b> "+msc+""
+			});
+			infowindow1.open(cogmap1, marker);
+		}
+	};
+	
+	var deleteMarkers1 = function()
+	{
+		for(i=0;i<markers1.length;i++){
+			markers1[i].setMap(null);
+		}
+		markers1= [];
+	};
+	
     Ext.create('Ext.Viewport', {
         layout: 'fit',
         items: [{
@@ -105,14 +134,247 @@ Ext.onReady(function () {
 								mainItem: 1,
 							
 								items: [{
-											title: 'MyHub Stats',
+											title: 'vCheck',
 											iconCls: 'x-icon-tickets',
 											tabTip: 'Tickets tabtip',
-											hidden:true,
+											//hidden:true,
 											//border: false,
 											//xtype: 'gridportlet',
-											margin: '10',
-											height: null
+											items:[
+											
+													{
+																			xtype:'container',
+																			layout: {
+																				type: 'vbox'
+																			},
+																			height: 800,
+																			padding:'10 10 10 10',
+																			
+																			items: [
+																						{
+																								xtype:'fieldset',
+																								
+																								height:50,
+																								width:'100%',
+																									padding:'10 10 10 10',
+																								
+																									
+																									items: [
+																										
+																										{
+																											xtype:'container',
+																											layout: {
+																												type: 'hbox'
+																											},
+																											//width: 300,
+																											//padding:'20 20 20 20',
+																											
+																											items: [
+																												{
+																												xtype:'combobox',
+																												fieldLabel: '<b>Orgin</b>',
+																												id:'orgin1',
+																												store: orgin,
+																												//queryMode: 'local',
+																												displayField: 'name',
+																												valueField: 'position'
+																												//renderTo: Ext.getBody()	
+																												},
+																												{
+																													xtype:'tbfill',
+																													width:10
+																												},
+																												{
+																												xtype:'combobox',
+																												fieldLabel: '<b>Destination</b>',
+																												id:'destination1',
+																												store: destination,
+																												//queryMode: 'local',
+																												displayField: 'name',
+																												valueField: 'position'
+																												//renderTo: Ext.getBody()	
+																												},
+																												{
+																													xtype:'tbfill',
+																													width:10
+																												},
+																												{
+																													xtype:'button',
+																													text: 'Check Network',
+																													width:100,
+																													handler:function() {
+																														
+																														
+																		
+																															var orginPoint = Ext.getCmp("orgin1").getValue();
+																															var destPoint =  Ext.getCmp("destination1").getValue();
+																															//var catPoint =  Ext.getCmp("category").getValue();
+																															
+																															if(orginPoint == ''|| destPoint == '' || orginPoint == null || destPoint == null){
+																																Ext.Msg.alert('VeriZonHub', 'Please select Orgin and Detaination');
+																																return;
+																															}
+																															
+																															//alert(catPoint);
+																															
+																															Ext.Ajax.request({ // 5
+																															url : '/vPro/VHubService',
+																															scope : this,
+																															params : {
+																															verizonPhoneNumber:"Cafe"
+																															//key:Ext.MessageBox.alert(recordsToInsertUpdate)
+																															},
+																															success:    function(result,request){
+																																	//alert(result.responseText)
+																																	var data = JSON.parse(result.responseText).data;
+																																	
+																																	if(orginPoint == 'Dupont Circle, Dupont Circle Northwest, Washington, DC 20036' && destPoint == 'American Geophysical Union, 2000 Florida Avenue Northwest, Washington, DC 20009')
+																																	{
+																																	//Ext.getCmp("rgrid").getStore().loadData(data)
+																																	}
+																																	else
+																																	{
+																																	Ext.Msg.alert('VeriZonHub', 'Data not Available');
+																																	return;		
+																																	}
+																																	 //var stepDisplay = new google.maps.InfoWindow;
+																																	 //var markerArray = [];
+																																	var request = {
+																																		origin : orginPoint ,//'chicago, il',
+																																		destination : destPoint ,//'st louis, mo',
+																																		travelMode : google.maps.TravelMode.DRIVING
+																																	};																			 																			
+																																	
+																																	//
+																																	deleteMarkers1();
+																																	
+																																	directionsService1.route(request, function(result, status) {
+																																		if (status == google.maps.DirectionsStatus.OK) {
+																																			directionsDisplay1.setDirections(result);
+																																			
+																																			for (i = 0; i < data.length; i++) {																							 
+																																				// var marker = new google.maps.Marker;
+																																				
+																																				var iconpng = 'extjs/resources/resturanticon.png';
+																																				if(data[i].cat == 'Shopping')
+																																					iconpng = 'extjs/resources/shoppingicon.png';
+																																				else if (data[i].cat == 'Cafe')
+																																					iconpng = 'extjs/resources/cafeicon.png';
+																																				
+																																				
+																																				 var marker = new google.maps.Marker({																					
+																																					
+																																					icon: iconpng,
+																																					animation:google.maps.Animation.BOUNCE
+																																				});
+																																				
+																																				marker.setMap(cogmap1);
+																																				var position = new google.maps.LatLng(data[i].lat,data[i].lon);
+																																				marker.setPosition(position);																							
+																																				
+																																				
+
+																																				 markers1.push(marker);
+																																				 
+																																				google.maps.event.addListener(marker, 'click', setaddress1(data[i].name,data[i].adress,data[i].rating,data[i].msc,marker));
+																																				
+																																			 }
+																																			
+																															
+																																		}
+																																	});
+																																}
+																															});
+																													}	
+																														
+																												},
+																												{
+																													xtype:'tbfill',
+																													width:10
+																												},
+																												{
+																													xtype:'button',
+																													text: 'Clear',
+																													width:100,
+																													handler:function() {
+																														Ext.getCmp("orgin1").setValue('');
+																														Ext.getCmp("destination1").setValue('');
+																														//Ext.getCmp("category").setValue('All');
+																														//Ext.getCmp("rgrid").getStore().removeAll();
+																														var myCenter=new google.maps.LatLng(51.508742,-0.120850);
+																															var marker = new google.maps.Marker({
+																															  position: myCenter
+																															 
+																															  });
+																															marker.setMap(cogmap1);
+																															cogmap1.setCenter(marker.getPosition());
+																													}	
+																														
+																												}
+																												
+																											]
+
+																										}
+																									]
+																								}	,
+																								{
+																									
+																								xtype:'fieldset',
+																								
+																								height:680,
+																								width:"100%",
+																									padding:'10 10 10 10',
+																								
+																									
+																									items: [
+																										
+																										{
+																											autoShow: true,
+																											layout: 'fit',
+																											closeAction: 'hide',
+																											
+																											height:700,
+																											border: false,
+																											x: 0,
+																											y: 0, 
+																											items: {
+																												xtype: 'gmappanel',
+																												//id:'gmappanel',
+																												//gmapType: 'map',
+																												zoomLevel: 14,
+																												center: {
+																													geoCodeAddr: '4 Yawkey Way, Boston, MA, 02215-3409, USA',
+																													marker: {title: 'Fenway Park'}
+																												},
+																								
+																												mapOptions : {
+																													mapTypeId: google.maps.MapTypeId.TERRAIN
+																												},
+
+																												listeners: {
+																														mapready: function(ux, gmap){
+																														//alert(99);
+																															 directionsService1 = new google.maps.DirectionsService();
+																																		 directionsDisplay1 = new google.maps.DirectionsRenderer();
+																																		//var start = 'chicago, il',//document.getElementById("start").value;
+																																		//var end = 'st louis, mo',//document.getElementById("end").value;
+																																		cogmap1 = gmap;
+																																		directionsDisplay1.setMap(cogmap1);
+																																	
+																																		
+																																		
+																														} 
+																													}
+																											}
+																										}
+																								
+																								]}
+
+																					]
+													}
+											],
+											margin: '10'
+											//height: null
 										}, {
 											xtype: 'portalpanel',
 											title: 'Verizon Hub',
